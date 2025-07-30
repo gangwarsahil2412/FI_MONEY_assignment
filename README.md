@@ -42,9 +42,14 @@ An inventory management application built with Node.js, Express, and MongoDB.
 
 Before running this application, make sure you have the following installed:
 
+### Option 1: Local Development
 - [Node.js](https://nodejs.org/) (version 14 or higher)
 - [MongoDB](https://www.mongodb.com/) (local installation or MongoDB Atlas)
 - [npm](https://www.npmjs.com/) (comes with Node.js)
+
+### Option 2: Docker Development
+- [Docker](https://www.docker.com/) (version 20.10 or higher)
+- [Docker Compose](https://docs.docker.com/compose/) (usually comes with Docker Desktop)
 
 ## Installation
 
@@ -54,6 +59,8 @@ git clone <repository-url>
 cd FI_MONEY_assignment
 ```
 
+### Option 1: Local Development
+
 2. Install dependencies:
 ```bash
 npm install
@@ -61,8 +68,20 @@ npm install
 
 3. Create a `.env` file in the root directory and add your environment variables:
 ```env
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/fimoney
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/fimoney
+JWT_SECRET=your_jwt_secret_key
+NODE_ENV=development
+```
+
+### Option 2: Docker Development
+
+2. No additional installation required! Docker will handle everything.
+
+3. Create a `.env` file in the root directory (optional for Docker, as environment variables are configured in docker-compose.yml):
+```env
+PORT=5000
+MONGO_URI=mongodb://admin:password123@localhost:27017/fimoney?authSource=admin
 JWT_SECRET=your_jwt_secret_key
 NODE_ENV=development
 ```
@@ -71,16 +90,20 @@ NODE_ENV=development
 
 Create a `.env` file with the following variables:
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `PORT` | Server port number | No (defaults to 3000) |
-| `MONGODB_URI` | MongoDB connection string | Yes |
-| `JWT_SECRET` | Secret key for JWT token generation | Yes |
-| `NODE_ENV` | Environment (development/production) | No |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `PORT` | Server port number | No | 5000 |
+| `MONGO_URI` | MongoDB connection string | Yes | - |
+| `JWT_SECRET` | Secret key for JWT token generation | Yes | - |
+| `NODE_ENV` | Environment (development/production) | No | development |
+
+**Note**: When using Docker, the MongoDB connection is automatically configured in the docker-compose.yml file.
 
 ## Usage
 
-### Development Mode
+### Option 1: Local Development
+
+#### Development Mode
 
 To start the development server with auto-restart:
 
@@ -88,15 +111,62 @@ To start the development server with auto-restart:
 npm run dev
 ```
 
-The server will start on `http://localhost:3000` (or your specified PORT).
+The server will start on `http://localhost:5000` (or your specified PORT).
 
-### Production Mode
+#### Production Mode
 
 To start the server in production:
 
 ```bash
 node server.js
 ```
+
+### Option 2: Docker Development
+
+#### Quick Start
+
+To build and start all services (MongoDB + Node.js app):
+
+```bash
+docker-compose up --build
+```
+
+#### Background Mode
+
+To run services in the background:
+
+```bash
+docker-compose up -d
+```
+
+#### View Logs
+
+```bash
+docker-compose logs -f
+```
+
+#### Stop Services
+
+```bash
+docker-compose down
+```
+
+#### Stop and Remove Data
+
+```bash
+docker-compose down -v
+```
+
+#### Rebuild After Changes
+
+```bash
+docker-compose up --build
+```
+
+### Access Points
+
+- **Application**: http://localhost:5000
+- **MongoDB**: localhost:27017 (if using Docker, credentials: admin/password123)
 
 ## API Endpoints
 
@@ -120,31 +190,41 @@ node server.js
 FI_MONEY_assignment/
 ├── server.js              # Main server file
 ├── package.json           # Project dependencies and scripts
-├── .env                   # Environment variables (create this)
-├── .gitignore            # Git ignore file (create this)
-├── assets/               # UI screenshots and images
-│   ├── addProduct.jpeg   # Add product page screenshot
-│   ├── login.jpeg        # Login page screenshot
-│   ├── products.jpeg     # Products overview screenshot
-│   ├── quantity.jpeg     # Quantity management screenshot
-│   └── register.jpeg     # Registration page screenshot
-├── config/               # Configuration files
-├── controllers/          # Route controllers
-├── middleware/           # Custom middleware
-├── models/               # Database models
-├── routes/               # API routes
-├── test.py              # Test files
-└── README.md            # Project documentation
+├── docker-compose.yml     # Docker orchestration file
+├── Dockerfile            # Docker image definition
+├── .dockerignore         # Docker build exclusions
+├── .env                  # Environment variables (create this)
+├── .gitignore           # Git ignore file (create this)
+├── assets/              # UI screenshots and images
+│   ├── addProduct.jpeg  # Add product page screenshot
+│   ├── login.jpeg       # Login page screenshot
+│   ├── products.jpeg    # Products overview screenshot
+│   ├── quantity.jpeg    # Quantity management screenshot
+│   └── register.jpeg    # Registration page screenshot
+├── config/              # Configuration files
+├── controllers/         # Route controllers
+├── middleware/          # Custom middleware
+├── models/              # Database models
+├── routes/              # API routes
+├── test.py             # Test files
+└── README.md           # Project documentation
 ```
 
 ## Dependencies
 
+### Production Dependencies
 - **express**: Web framework for Node.js
 - **mongoose**: MongoDB object modeling tool
 - **jsonwebtoken**: JWT implementation for authentication
 - **bcryptjs**: Password hashing library
 - **dotenv**: Environment variable loader
+
+### Development Dependencies
 - **nodemon**: Development tool for auto-restarting server
+
+### Docker Dependencies
+- **Docker**: Containerization platform
+- **Docker Compose**: Multi-container orchestration
 
 ## Contributing
 
